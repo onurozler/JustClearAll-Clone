@@ -10,15 +10,18 @@ namespace Assets.Scripts.Classes
         // Properties of Player
         private int _stage;
         private int _score;
+        private TileCube _tileCube;
 
         // Constructor
-        public Player(int stage, int score)
+        public Player(int stage, int score, TileCube tileCube)
         {
             this._stage = stage;
             this._score = score;
+            this._tileCube = tileCube;
         }
 
         // Getter & Setter
+
         public int setStage
         {
             set { _stage = value; }
@@ -38,8 +41,10 @@ namespace Assets.Scripts.Classes
         {
             get { return _score; }
         }
-
-
+        public TileCube getTileCube
+        {
+            get { return _tileCube; }
+        }
     }
 
 

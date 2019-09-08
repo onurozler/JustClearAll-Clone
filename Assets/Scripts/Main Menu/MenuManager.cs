@@ -15,7 +15,7 @@ namespace Assets.Scripts.Main_Menu
             if (player == null)
             {
                 print("There is no existing data. First data is creating...");
-                string result = DataManager.SaveData(new Player(1, 0));
+                string result = DataManager.SaveData(new Player(1, 0,new TileCube()));
                 print(result);
             }
         }

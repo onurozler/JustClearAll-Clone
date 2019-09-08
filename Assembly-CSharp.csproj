@@ -11,7 +11,7 @@
     <ProductVersion>10.0.20506</ProductVersion>
     <SchemaVersion>2.0</SchemaVersion>
     <RootNamespace></RootNamespace>
-    <ProjectGuid>{6AF49BE6-A091-93DB-1ED2-93DA3B71E7F9}</ProjectGuid>
+    <ProjectGuid>{D042E4AB-8134-4979-B164-075FADCA58FE}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <AssemblyName>Assembly-CSharp</AssemblyName>
@@ -62,42 +62,48 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Assets\Scripts\Classes\BlockSelector.cs" />
     <Compile Include="Assets\Scripts\Classes\DataManager.cs" />
     <Compile Include="Assets\Scripts\Classes\Player.cs" />
-    <Compile Include="Assets\Scripts\Classes\TileCreator.cs" />
+    <Compile Include="Assets\Scripts\Classes\TileCube.cs" />
+    <Compile Include="Assets\Scripts\Game\BlockNumberGenerator.cs" />
+    <Compile Include="Assets\Scripts\Game\GameManager.cs" />
+    <Compile Include="Assets\Scripts\Game\GameState.cs" />
+    <Compile Include="Assets\Scripts\Game\InputManager.cs" />
+    <Compile Include="Assets\Scripts\Game\LevelManager.cs" />
     <Compile Include="Assets\Scripts\Main Menu\MenuManager.cs" />
     <Reference Include="Unity.Timeline.Editor">
-      <HintPath>C:/Users/ONUR OZLER/Desktop/Creasaur Task/Just Clear All - Clone/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
+      <HintPath>C:/Users/ONUR OZLER/Desktop/Creasaur Task/JustClearAll/Library/ScriptAssemblies/Unity.Timeline.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.VSCode.Editor">
-      <HintPath>C:/Users/ONUR OZLER/Desktop/Creasaur Task/Just Clear All - Clone/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
+      <HintPath>C:/Users/ONUR OZLER/Desktop/Creasaur Task/JustClearAll/Library/ScriptAssemblies/Unity.VSCode.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro.Editor">
-      <HintPath>C:/Users/ONUR OZLER/Desktop/Creasaur Task/Just Clear All - Clone/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
+      <HintPath>C:/Users/ONUR OZLER/Desktop/Creasaur Task/JustClearAll/Library/ScriptAssemblies/Unity.TextMeshPro.Editor.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.UI">
-      <HintPath>C:/Users/ONUR OZLER/Desktop/Creasaur Task/Just Clear All - Clone/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
+      <HintPath>C:/Users/ONUR OZLER/Desktop/Creasaur Task/JustClearAll/Library/ScriptAssemblies/UnityEngine.UI.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Timeline">
-      <HintPath>C:/Users/ONUR OZLER/Desktop/Creasaur Task/Just Clear All - Clone/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
+      <HintPath>C:/Users/ONUR OZLER/Desktop/Creasaur Task/JustClearAll/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
     </Reference>
     <Reference Include="Unity.CollabProxy.Editor">
-      <HintPath>C:/Users/ONUR OZLER/Desktop/Creasaur Task/Just Clear All - Clone/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
+      <HintPath>C:/Users/ONUR OZLER/Desktop/Creasaur Task/JustClearAll/Library/ScriptAssemblies/Unity.CollabProxy.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Rider.Editor">
-      <HintPath>C:/Users/ONUR OZLER/Desktop/Creasaur Task/Just Clear All - Clone/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
+      <HintPath>C:/Users/ONUR OZLER/Desktop/Creasaur Task/JustClearAll/Library/ScriptAssemblies/Unity.Rider.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.2D.Sprite.Editor">
-      <HintPath>C:/Users/ONUR OZLER/Desktop/Creasaur Task/Just Clear All - Clone/Library/ScriptAssemblies/Unity.2D.Sprite.Editor.dll</HintPath>
+      <HintPath>C:/Users/ONUR OZLER/Desktop/Creasaur Task/JustClearAll/Library/ScriptAssemblies/Unity.2D.Sprite.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.2D.Tilemap.Editor">
-      <HintPath>C:/Users/ONUR OZLER/Desktop/Creasaur Task/Just Clear All - Clone/Library/ScriptAssemblies/Unity.2D.Tilemap.Editor.dll</HintPath>
+      <HintPath>C:/Users/ONUR OZLER/Desktop/Creasaur Task/JustClearAll/Library/ScriptAssemblies/Unity.2D.Tilemap.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.TextMeshPro">
-      <HintPath>C:/Users/ONUR OZLER/Desktop/Creasaur Task/Just Clear All - Clone/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
+      <HintPath>C:/Users/ONUR OZLER/Desktop/Creasaur Task/JustClearAll/Library/ScriptAssemblies/Unity.TextMeshPro.dll</HintPath>
     </Reference>
     <Reference Include="UnityEditor.UI">
-      <HintPath>C:/Users/ONUR OZLER/Desktop/Creasaur Task/Just Clear All - Clone/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
+      <HintPath>C:/Users/ONUR OZLER/Desktop/Creasaur Task/JustClearAll/Library/ScriptAssemblies/UnityEditor.UI.dll</HintPath>
     </Reference>
     <Reference Include="UnityEngine.AIModule">
       <HintPath>D:/Program Files (x86)/2019.2.1f1/Editor/Data/Managed/UnityEngine/UnityEngine.AIModule.dll</HintPath>
