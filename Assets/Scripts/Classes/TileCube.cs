@@ -49,7 +49,7 @@ namespace Assets.Scripts.Classes
 
             return _tiles;
         }
-        public List<Vector2Int> GetSelectedBlockCubes(Vector2Int index)
+        public List<Vector2Int> GetSelectedBlockTiles(Vector2Int index)
         {
             int[,] temp = _tiles.Clone() as int[,];
             List<Vector2Int> returnPositionOfSelectedCubes = new List<Vector2Int>();  
@@ -67,5 +67,32 @@ namespace Assets.Scripts.Classes
             return returnPositionOfSelectedCubes;
         }
 
+        public void DeleteSelectedBlockTiles(Vector2Int index)
+        {
+            for (int i = 0; i < ROW; i++)
+            {
+                for (int j = 0; j < COLUMN; j++)
+                {
+                    if (i == index.x && j == index.y)
+                        _tiles[i, j] = 0;
+                }
+            }
+            RepositionTiles();
+        }
+
+        public void RepositionTiles()
+        {
+            for (int j = 0; j < COLUMN; j++)
+            {
+                for (int i = 0; i < ROW - 1; i++)
+                {
+                    if (_tiles[i, j] != 0 && _tiles[i+1,j] == 0)
+                    {
+                        _tiles[i+1, j] = _tiles[i, j];
+                        _tiles[i, j] = 0;
+                    }
+                }
+            }
+        }
     }
 }

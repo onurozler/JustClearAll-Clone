@@ -66,7 +66,7 @@
     <Compile Include="Assets\Scripts\Classes\DataManager.cs" />
     <Compile Include="Assets\Scripts\Classes\Player.cs" />
     <Compile Include="Assets\Scripts\Classes\TileCube.cs" />
-    <Compile Include="Assets\Scripts\Game\BlockNumberGenerator.cs" />
+    <Compile Include="Assets\Scripts\Game\BlockNumbers.cs" />
     <Compile Include="Assets\Scripts\Game\GameManager.cs" />
     <Compile Include="Assets\Scripts\Game\GameState.cs" />
     <Compile Include="Assets\Scripts\Game\InputManager.cs" />

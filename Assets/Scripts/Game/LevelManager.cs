@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Numerics;
+﻿
 using UnityEngine;
 using Assets.Scripts.Classes;
 using UnityEngine.UI;
@@ -12,38 +9,30 @@ namespace Assets.Scripts.Game
 
     public class LevelManager : MonoBehaviour
     {
-        // Game Area reference
-        public GameObject GameArea;
 
-        // Private values
-        private Player _player;
-        private Dictionary<Vector2Int, GameObject> _cubeButtons;
+        // Background and Block loaded from Prefabs
+        private GameObject _tileBackground;
+        private GameObject _tileBlock;
+        private GameObject _gameArea;
 
-        // Loading save data to generate Levels
-        public void Awake()
+
+        public void Init(GameObject area)
         {
-            _player = DataManager.LoadData();
-            _cubeButtons = new Dictionary<Vector2Int, GameObject>();
-            GenerateLevel(_player.getTileCube);
+            _gameArea = area;
+            _tileBackground = Resources.Load("Prefabs/TileBackground") as GameObject;
+            _tileBlock = Resources.Load("Prefabs/TileBlock") as GameObject;
         }
 
-        public void Start()
+        // Generate Level Loading from data
+        public void GenerateStage(BlockNumbers bNumbers, int stage)
         {
-
-        }
-
-        public void GenerateLevel(TileCube tileCube)
-        {
-            
-            GameArea.GetComponent<GridLayoutGroup>().enabled = true;
-
-            GameObject tileBackground = Resources.Load("Prefabs/TileBackground") as GameObject;
-            GameObject tileBlock = Resources.Load("Prefabs/TileBlock") as GameObject;
+            bNumbers.Clear();
+            _gameArea.GetComponent<GridLayoutGroup>().enabled = true;
 
             // Generate Tiles 8x8 Array with Stage
-            int[,] cubes = tileCube.GenerateTilesWithStage(1);
+            int[,] cubes = bNumbers.GenerateElementsWithStage(stage);
 
-            // Match this array with dynamically created Buttons
+            // Match Block Numbers and TileCubes by using dynamically created Buttons
             for (int i = 0; i < cubes.GetLength(0); i++)
             {
                 for (int j = 0; j < cubes.GetLength(1); j++)
@@ -52,18 +41,21 @@ namespace Assets.Scripts.Game
                     if (cubes[i, j] != 0)
                     {
                         int number = cubes[i, j];
-                        cube = Instantiate(tileBlock, GameArea.transform);
-                        cube.transform.GetChild(0).GetComponent<Text>().text = number.ToString();
-                        cube.transform.GetComponent<Image>().color = BlockNumberGenerator.GetColor(number);
+                        cube = Instantiate(_tileBlock, _gameArea.transform);
+                        bNumbers.SetCubeProperties(cube, number);
                     }
-
                     else
-                        cube = Instantiate(tileBackground, GameArea.transform);
+                        cube = Instantiate(_tileBackground, _gameArea.transform);
 
-                    _cubeButtons.Add(new Vector2Int(i, j), cube);
-                    
+                    bNumbers.AddElement(new Vector2Int(i, j), cube);
                 }
             }
+
+        }
+
+        public void GenerateNewStage(BlockNumbers bNumbers)
+        {
+
         }
     }
 }
