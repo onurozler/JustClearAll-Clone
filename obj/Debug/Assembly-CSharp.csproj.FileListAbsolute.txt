@@ -518,3 +518,14 @@ C:\Users\ONUR OZLER\Desktop\Creasaur Task\JustClearAll\obj\Debug\Assembly-CSharp
 C:\Users\ONUR OZLER\Desktop\Creasaur Task\JustClearAll\obj\Debug\Assembly-CSharp.csproj.CopyComplete
 C:\Users\ONUR OZLER\Desktop\Creasaur Task\JustClearAll\obj\Debug\Assembly-CSharp.dll
 C:\Users\ONUR OZLER\Desktop\Creasaur Task\JustClearAll\obj\Debug\Assembly-CSharp.pdb
+C:\Users\ONUR OZLER\Desktop\Creasaur Task\JustClearAll\Temp\bin\Debug\Unity.Timeline.Editor.pdb
+C:\Users\ONUR OZLER\Desktop\Creasaur Task\JustClearAll\Temp\bin\Debug\Unity.VSCode.Editor.pdb
+C:\Users\ONUR OZLER\Desktop\Creasaur Task\JustClearAll\Temp\bin\Debug\Unity.TextMeshPro.Editor.pdb
+C:\Users\ONUR OZLER\Desktop\Creasaur Task\JustClearAll\Temp\bin\Debug\UnityEngine.UI.pdb
+C:\Users\ONUR OZLER\Desktop\Creasaur Task\JustClearAll\Temp\bin\Debug\Unity.Timeline.pdb
+C:\Users\ONUR OZLER\Desktop\Creasaur Task\JustClearAll\Temp\bin\Debug\Unity.CollabProxy.Editor.pdb
+C:\Users\ONUR OZLER\Desktop\Creasaur Task\JustClearAll\Temp\bin\Debug\Unity.Rider.Editor.pdb
+C:\Users\ONUR OZLER\Desktop\Creasaur Task\JustClearAll\Temp\bin\Debug\Unity.2D.Sprite.Editor.pdb
+C:\Users\ONUR OZLER\Desktop\Creasaur Task\JustClearAll\Temp\bin\Debug\Unity.2D.Tilemap.Editor.pdb
+C:\Users\ONUR OZLER\Desktop\Creasaur Task\JustClearAll\Temp\bin\Debug\Unity.TextMeshPro.pdb
+C:\Users\ONUR OZLER\Desktop\Creasaur Task\JustClearAll\Temp\bin\Debug\UnityEditor.UI.pdb

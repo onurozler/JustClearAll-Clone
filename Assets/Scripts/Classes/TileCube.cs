@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Assets.Scripts.Classes
@@ -77,22 +78,63 @@ namespace Assets.Scripts.Classes
                         _tiles[i, j] = 0;
                 }
             }
-            RepositionTiles();
         }
 
-        public void RepositionTiles()
+
+        public Dictionary<Vector2Int,Vector2Int> RepositionTiles()
         {
+            // Holding values in Queue
+            Queue<int> columnQueue = new Queue<int>();
+
+            // Holding new and old positions to update Numbers too
+            List<Vector2Int> oldPosition = new List<Vector2Int>();
+            List<Vector2Int> newPosition = new List<Vector2Int>();
+            
+            // Reposition Tiles from top to down 
             for (int j = 0; j < COLUMN; j++)
             {
-                for (int i = 0; i < ROW - 1; i++)
+                for (int i = 0; i < ROW ; i++)
                 {
-                    if (_tiles[i, j] != 0 && _tiles[i+1,j] == 0)
+                    if (_tiles[i, j] != 0)
                     {
-                        _tiles[i+1, j] = _tiles[i, j];
+                        columnQueue.Enqueue(_tiles[i,j]);
+                        oldPosition.Add(new Vector2Int(i,j));
                         _tiles[i, j] = 0;
                     }
                 }
+
+                for (int k = ROW - columnQueue.Count; k < ROW; k++)
+                {
+                    _tiles[k, j] = columnQueue.Dequeue();
+                    newPosition.Add(new Vector2Int(k,j));
+                }
             }
+
+            var returnDict = oldPosition.Zip(newPosition, (k, v) => new {Key = k, Value = v}).
+                ToDictionary(x=> x.Key, x=>x.Value);
+
+            return returnDict;
+        }
+
+        public Dictionary<Vector2Int, Vector2Int> RepositionColumnTiles()
+        {
+            // Holding new and old positions to update Numbers too
+            Dictionary<Vector2Int,Vector2Int> oldAndNewPosition = new Dictionary<Vector2Int, Vector2Int>();
+
+            for (int j = 0; j < COLUMN-1; j++)
+            {
+                if (_tiles[7, j] == 0)
+                {
+                    for (int i = 0; i < ROW; i++)
+                    {
+                        _tiles[i,j] = _tiles[i, j + 1];
+                        _tiles[i, j + 1] = 0;
+                        oldAndNewPosition.Add(new Vector2Int(i,j+1), new Vector2Int(i,j) );
+                    }
+                }
+            }
+
+            return oldAndNewPosition;
         }
     }
 }

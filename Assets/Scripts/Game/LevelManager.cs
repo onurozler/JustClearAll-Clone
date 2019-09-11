@@ -19,7 +19,6 @@ namespace Assets.Scripts.Game
         public void Init(GameObject area)
         {
             _gameArea = area;
-            _tileBackground = Resources.Load("Prefabs/TileBackground") as GameObject;
             _tileBlock = Resources.Load("Prefabs/TileBlock") as GameObject;
         }
 
@@ -27,6 +26,8 @@ namespace Assets.Scripts.Game
         public void GenerateStage(BlockNumbers bNumbers, int stage)
         {
             bNumbers.Clear();
+            GameManager.Score = 0;
+
             _gameArea.GetComponent<GridLayoutGroup>().enabled = true;
 
             // Generate Tiles 8x8 Array with Stage
@@ -37,17 +38,13 @@ namespace Assets.Scripts.Game
             {
                 for (int j = 0; j < cubes.GetLength(1); j++)
                 {
-                    GameObject cube;
                     if (cubes[i, j] != 0)
                     {
                         int number = cubes[i, j];
-                        cube = Instantiate(_tileBlock, _gameArea.transform);
+                        GameObject cube = Instantiate(_tileBlock, _gameArea.transform);
                         bNumbers.SetCubeProperties(cube, number);
+                        bNumbers.AddElement(new Vector2Int(i, j), cube);
                     }
-                    else
-                        cube = Instantiate(_tileBackground, _gameArea.transform);
-
-                    bNumbers.AddElement(new Vector2Int(i, j), cube);
                 }
             }
 

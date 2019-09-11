@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 using UnityEngine.UI;
 
 
@@ -13,11 +14,14 @@ namespace Assets.Scripts.Game
     {
         private BlockNumbers _blockNumbers;
         private GameObject _gameArea;
+        private GameObject _canvas;
+        
 
-        public void Init(BlockNumbers blockNumbers, GameObject area)
+        public void Init(BlockNumbers blockNumbers, GameObject area, GameObject canvas)
         {
             _blockNumbers = blockNumbers;
             _gameArea = area;
+            _canvas = canvas;
         }
 
         private void Update()
@@ -42,7 +46,8 @@ namespace Assets.Scripts.Game
                         if (hit.collider.CompareTag("Clickable"))
                         {
                             GameObject clicked = hit.collider.gameObject;
-                            if(AreTheyInSameGroup(clicked))
+                            //clicked.transform.Translate(Vector2.left * 0.7f);
+                            if (AreTheyInSameGroup(clicked))
                                 DoubleClickSelectedNumbers(clicked);
                             else
                                 HighlightSelectedNumbers(clicked);
@@ -68,6 +73,9 @@ namespace Assets.Scripts.Game
 
             if (selectedElements == null) return;
 
+            int numberOfElement = int.Parse(selectedElements[0].transform.GetChild(0).GetComponent<Text>().text);
+            ShowSelectedBlocks(numberOfElement, selectedElements.Count);
+
             _clickCheck.Clear();
             _clickCheck.AddRange(selectedElements);
         }
@@ -82,30 +90,64 @@ namespace Assets.Scripts.Game
             var deletedElements = selectedElements.Where(x => x != clicked);
             foreach (var element in deletedElements)
             {
-                _blockNumbers.RefreshElements(positionClicked);
+                _blockNumbers.RefreshElements(_blockNumbers.GetPositionByElement(element));
+                _blockNumbers.RemoveElement(element);
                 Destroy(element);
             }
 
+            _blockNumbers.RepositionElements();
+            _clickCheck.Clear();
+
+
+            if (!_blockNumbers.CanMove())
+                FinishedStage();
+
+            
             for (int i = 0; i < 8; i++)
             {
-                for (int j = 0; j < 8; j++)
-                {
-                    print(_blockNumbers._tileCube.GetCubes()[i,j] + " x: " + i + " y: "+ j);
-                }
+                print(_blockNumbers._tileCube.GetCubes()[i, 0] + " " + _blockNumbers._tileCube.GetCubes()[i, 1] + " " + _blockNumbers._tileCube.GetCubes()[i, 2] + " " +_blockNumbers._tileCube.GetCubes()[i, 3] + " " +_blockNumbers._tileCube.GetCubes()[i, 4] + " " +_blockNumbers._tileCube.GetCubes()[i, 5] + " " +_blockNumbers._tileCube.GetCubes()[i, 6] + " " + _blockNumbers._tileCube.GetCubes()[i, 7]);
             }
             
         }
 
+
         // ************************************** UI Interactions *************************************************
 
-        public void PauseGame()
+        public void PauseOrContinueGame(bool isPausing)
         {
-            GameManager.GameStatus = GameState.PAUSING;
+            GameObject pausePanel = _canvas.transform.GetChild(2).gameObject;
+            if (isPausing)
+            {
+                GameManager.GameStatus = GameState.PAUSING;
+                pausePanel.SetActive(true);
+            }
+            else
+            {
+                GameManager.GameStatus = GameState.PLAYING;
+                pausePanel.SetActive(false);
+            }
         }
 
-        public void ContinueGame()
+        public void ShowSelectedBlocks(int number,int count)
         {
-            GameManager.GameStatus = GameState.PLAYING;
+            Text selectedBlocksText = _canvas.transform.GetChild(1).GetChild(0).GetComponent<Text>();
+            selectedBlocksText.text = count + " Tiles" + " +" + (number * 5) * count;
+        }
+
+        public void ScoreUpdate(int score)
+        {
+            Text scoreText = _canvas.transform.GetChild(0).GetChild(0).GetComponent<Text>();
+            scoreText.text = score.ToString();
+        }
+
+        public void ToMenu()
+        {
+            SceneManager.LoadScene("Main Menu");
+        }
+
+        public void FinishedStage()
+        {
+            GameManager.GameStatus = GameState.PAUSING;
         }
     }
 }

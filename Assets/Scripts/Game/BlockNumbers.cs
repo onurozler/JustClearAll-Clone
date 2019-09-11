@@ -24,6 +24,11 @@ namespace Assets.Scripts.Game
             _cubeButtons.Add(position,element);
         }
 
+        public void RemoveElement(GameObject element)
+        {
+            _cubeButtons.Remove(GetPositionByElement(element));
+        }
+
         public void Clear()
         {
             _cubeButtons.Clear();
@@ -33,6 +38,50 @@ namespace Assets.Scripts.Game
         {
              _tileCube.DeleteSelectedBlockTiles(position);
         }
+
+        public bool CanMove()
+        {
+            foreach (var position in _cubeButtons.Keys)
+            {
+                if (GetSelectedBlockNumbers(position) != null)
+                    return true;
+            }
+
+            return false;
+        }
+
+        public void RepositionElements()
+        {
+            var newAndOldPositions = _tileCube.RepositionTiles();
+            var tempDict = new Dictionary<Vector2Int, GameObject>();
+
+            /*
+            var columnUpdate = _tileCube.RepositionColumnTiles();
+            foreach (var position in columnUpdate)
+            {
+                for (int i = 0; i < newAndOldPositions.Count; i++)
+                {
+                    
+                }
+            }*/
+
+            foreach (var position in newAndOldPositions)
+            {
+                // No need to check if its old position and new position is same.
+                if (position.Key == position.Value)
+                    continue;
+
+                var element = _cubeButtons.Where(x => x.Key == position.Key)?.SingleOrDefault();
+                _cubeButtons.Remove(element.Value.Key);
+                tempDict.Add(position.Value,element.Value.Value);
+            }
+
+            foreach (var temp in tempDict)
+            {
+                _cubeButtons.Add(temp.Key,temp.Value);
+            }
+        }
+
 
         public int[,] GenerateElementsWithStage(int stage)
         {
