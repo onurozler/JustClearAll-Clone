@@ -33,13 +33,56 @@ namespace Assets.Scripts.Classes
             return _tiles;
         }
 
+        public int GetEmptyColumnsCount()
+        {
+            int number = 0;
+            for (int j = 0; j < COLUMN - 1; j++)
+            {
+                if (_tiles[7, j] == 0)
+                {
+                    number++;
+                }
+            }
+
+            return number;
+        }
+
         public int[,] GenerateTilesWithStage(int stage)
         {
+            // Very Basic Probability System that keeping low numbers probability is high to generate
+            // Finding Ratio of numbers
+            Dictionary<int,int> probabilityOfNumbers = new Dictionary<int, int>();
+            int percentage = 100;
+            int highChance = 40;
+
+            for (int i = 1; i < stage + 2; i++)
+            {
+                highChance /= i;
+                int percentageOfI = UnityEngine.Random.Range(highChance, percentage);
+                percentage -= percentageOfI;
+                
+                probabilityOfNumbers.Add(i,percentageOfI);
+            }
+            probabilityOfNumbers.Add(stage + 2, percentage);
+
+
             for (int i = 0; i < ROW; i++)
             {
                 for (int j = 0; j < COLUMN; j++)
                 {
-                    _tiles[i,j] = UnityEngine.Random.Range(1, stage+3);
+                    int random = UnityEngine.Random.Range(0, 50);
+                    foreach (var probability in probabilityOfNumbers.Reverse())
+                    {
+                        if (random < probability.Value)
+                        {
+                            _tiles[i, j] = probability.Key;
+                            break;
+                        }
+                        else
+                        {
+                            _tiles[i, j] = 1;
+                        }
+                    }
                 }
             }
             // Selecting Target Block
@@ -121,20 +164,27 @@ namespace Assets.Scripts.Classes
             // Holding new and old positions to update Numbers too
             Dictionary<Vector2Int,Vector2Int> oldAndNewPosition = new Dictionary<Vector2Int, Vector2Int>();
 
-            for (int j = 0; j < COLUMN-1; j++)
-            {
-                if (_tiles[7, j] == 0)
+                for (int j = 0; j < COLUMN - 1; j++)
                 {
-                    for (int i = 0; i < ROW; i++)
+                    if (_tiles[7, j] == 0)
                     {
-                        _tiles[i,j] = _tiles[i, j + 1];
-                        _tiles[i, j + 1] = 0;
-                        oldAndNewPosition.Add(new Vector2Int(i,j+1), new Vector2Int(i,j) );
+                        for (int i = 0; i < ROW; i++)
+                        {
+                            if (_tiles[i, j + 1] != 0)
+                            {
+                                _tiles[i, j] = _tiles[i, j + 1];
+                                _tiles[i, j + 1] = 0;
+                                oldAndNewPosition.Add(new Vector2Int(i, j + 1), new Vector2Int(i, j));
+                            }
+                        }
                     }
                 }
-            }
 
-            return oldAndNewPosition;
+            if(oldAndNewPosition.Count>0)
+                return oldAndNewPosition;
+
+           return null;
+
         }
     }
 }

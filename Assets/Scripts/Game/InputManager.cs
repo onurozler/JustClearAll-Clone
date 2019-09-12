@@ -46,7 +46,6 @@ namespace Assets.Scripts.Game
                         if (hit.collider.CompareTag("Clickable"))
                         {
                             GameObject clicked = hit.collider.gameObject;
-                            //clicked.transform.Translate(Vector2.left * 0.7f);
                             if (AreTheyInSameGroup(clicked))
                                 DoubleClickSelectedNumbers(clicked);
                             else
@@ -74,7 +73,7 @@ namespace Assets.Scripts.Game
             if (selectedElements == null) return;
 
             int numberOfElement = int.Parse(selectedElements[0].transform.GetChild(0).GetComponent<Text>().text);
-            ShowSelectedBlocks(numberOfElement, selectedElements.Count);
+            ShowSelectedBlocks(selectedElements.Count, CalculatePoint(numberOfElement, selectedElements.Count));
 
             _clickCheck.Clear();
             _clickCheck.AddRange(selectedElements);
@@ -96,23 +95,34 @@ namespace Assets.Scripts.Game
             }
 
             _blockNumbers.RepositionElements();
+            _blockNumbers.RepositionColumns();
             _clickCheck.Clear();
 
 
-            if (!_blockNumbers.CanMove())
-                FinishedStage();
 
-            
             for (int i = 0; i < 8; i++)
             {
-                print(_blockNumbers._tileCube.GetCubes()[i, 0] + " " + _blockNumbers._tileCube.GetCubes()[i, 1] + " " + _blockNumbers._tileCube.GetCubes()[i, 2] + " " +_blockNumbers._tileCube.GetCubes()[i, 3] + " " +_blockNumbers._tileCube.GetCubes()[i, 4] + " " +_blockNumbers._tileCube.GetCubes()[i, 5] + " " +_blockNumbers._tileCube.GetCubes()[i, 6] + " " + _blockNumbers._tileCube.GetCubes()[i, 7]);
+                print(_blockNumbers.getTileCube.GetCubes()[i, 0] + " " + _blockNumbers.getTileCube.GetCubes()[i, 1] + " " + _blockNumbers.getTileCube.GetCubes()[i, 2] + " " + _blockNumbers.getTileCube.GetCubes()[i, 3] + " " + _blockNumbers.getTileCube.GetCubes()[i, 4] + " " + _blockNumbers.getTileCube.GetCubes()[i, 5] + " " + _blockNumbers.getTileCube.GetCubes()[i, 6] + " " + _blockNumbers.getTileCube.GetCubes()[i, 7]);
             }
+
+
+
+            // Update Score
+
+            int numberOfElement = int.Parse(selectedElements[0].transform.GetChild(0).GetComponent<Text>().text);
+            int addedScore = CalculatePoint(numberOfElement, selectedElements.Count);
+            ScoreUpdate(addedScore);
+
+            if (!_blockNumbers.CanMove())
+                FinishedStage(_blockNumbers.GetLength());
+
             
         }
 
 
         // ************************************** UI Interactions *************************************************
 
+        // Pause or Continue game depending on input from buttons
         public void PauseOrContinueGame(bool isPausing)
         {
             GameObject pausePanel = _canvas.transform.GetChild(2).gameObject;
@@ -128,26 +138,106 @@ namespace Assets.Scripts.Game
             }
         }
 
-        public void ShowSelectedBlocks(int number,int count)
+        // Show selected blocks on top and its points that player can get
+        public void ShowSelectedBlocks(int count,int point)
         {
             Text selectedBlocksText = _canvas.transform.GetChild(1).GetChild(0).GetComponent<Text>();
-            selectedBlocksText.text = count + " Tiles" + " +" + (number * 5) * count;
+            selectedBlocksText.text = count + " Tiles + " + point;
         }
 
+        // Update Scores and Score Label on UI
         public void ScoreUpdate(int score)
         {
+            GameManager.Score += score;
+
             Text scoreText = _canvas.transform.GetChild(0).GetChild(0).GetComponent<Text>();
-            scoreText.text = score.ToString();
+            scoreText.text = GameManager.Score.ToString();
         }
 
+        // Returns to Menu
         public void ToMenu()
         {
             SceneManager.LoadScene("Main Menu");
         }
 
-        public void FinishedStage()
+        // Load Game Scene
+        public void LoadGameScene()
+        {
+            SceneManager.LoadScene("Game");
+        }
+
+        // Showing Successfull or fail pop up according to last score
+        public void ShowLastPopUp(int extra)
+        {
+            GameObject LastPopUp;
+            int score = 0;
+            score += extra > 0 ? extra : -extra;
+            string scoreOp = extra > 0 ? " + " : " - ";
+
+            if (GameManager.Mission == Mission.SUCCESSFULL)
+            {
+                LastPopUp = _canvas.transform.GetChild(3).gameObject;
+                LastPopUp.transform.GetChild(2).GetComponent<Text>().text = "SCORE = " + (GameManager.Score + score) + scoreOp + score;
+                LastPopUp.transform.GetChild(3).GetComponent<Text>().text = "TOTAL = " + GameManager.Score.ToString();
+            }
+            else
+            {
+                LastPopUp = _canvas.transform.GetChild(4).gameObject;
+                LastPopUp.transform.GetChild(2).GetComponent<Text>().text = "SCORE = " + (GameManager.Score + score) + scoreOp + score;
+                LastPopUp.transform.GetChild(3).GetComponent<Text>().text = "TOTAL = " + GameManager.Score.ToString();
+            }
+            LastPopUp.SetActive(true);
+        }
+
+
+        // ************************************** Calculations *************************************************
+        // Calculate number point depending on count
+        public int CalculatePoint(int number,int count)
+        {
+            int total = number * 5 * count;
+            if (count>4 && count < 10)
+            {
+                total *= 2;
+            }
+            else if (count > 9 && count < 15)
+            {
+                total *= 3;
+            }
+            else if(count > 14)
+            {
+                total *= 4;
+            }
+
+            return total;
+        }
+
+        // Calculate Extra point, if there is no number, then player can get extra points. But if there
+        // is left player get punishment points.
+        public int CalculateExtraPoint(int count)
+        {
+            int total = 0;
+            if (count == 0)
+                total = 1000 + ((GameManager.Stage - 1) * 500);
+
+            int penaltyPoint = 100 + ((GameManager.Stage - 1) * 50);
+
+            penaltyPoint *= count;
+
+            total -= penaltyPoint;
+
+            return total;
+        }
+
+        // Calculate total Score and decide if Player is Successfull or not.
+        public void FinishedStage(int leftElements)
         {
             GameManager.GameStatus = GameState.PAUSING;
+            int extra = CalculateExtraPoint(leftElements);
+            GameManager.Score += extra;
+
+            GameManager.Mission = GameManager.Score > GameManager.Target ? Mission.SUCCESSFULL : Mission.FAIL;
+
+            ShowLastPopUp(extra);
         }
     }
 }

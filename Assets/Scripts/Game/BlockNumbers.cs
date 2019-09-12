@@ -1,4 +1,5 @@
 ﻿
+using System;
 using System.Collections.Generic;
 using Assets.Scripts.Classes;
 using UnityEngine;
@@ -11,7 +12,7 @@ namespace Assets.Scripts.Game
     {
         
         private Dictionary<Vector2Int, GameObject> _cubeButtons;
-        public TileCube _tileCube;
+        private TileCube _tileCube;
 
         public BlockNumbers(TileCube tileCube)
         {
@@ -19,10 +20,21 @@ namespace Assets.Scripts.Game
             this._tileCube = tileCube;
         }
 
+        public TileCube getTileCube
+        {
+            get { return _tileCube; }
+        }
+
+        public Dictionary<Vector2Int, GameObject> GetNumbers()
+        {
+            return _cubeButtons;
+        }
+
         public void AddElement(Vector2Int position, GameObject element)
         {
             _cubeButtons.Add(position,element);
         }
+
 
         public void RemoveElement(GameObject element)
         {
@@ -37,6 +49,11 @@ namespace Assets.Scripts.Game
         public void RefreshElements(Vector2Int position)
         {
              _tileCube.DeleteSelectedBlockTiles(position);
+        }
+
+        public int GetLength()
+        {
+            return _cubeButtons.Count();
         }
 
         public bool CanMove()
@@ -54,17 +71,6 @@ namespace Assets.Scripts.Game
         {
             var newAndOldPositions = _tileCube.RepositionTiles();
             var tempDict = new Dictionary<Vector2Int, GameObject>();
-
-            /*
-            var columnUpdate = _tileCube.RepositionColumnTiles();
-            foreach (var position in columnUpdate)
-            {
-                for (int i = 0; i < newAndOldPositions.Count; i++)
-                {
-                    
-                }
-            }*/
-
             foreach (var position in newAndOldPositions)
             {
                 // No need to check if its old position and new position is same.
@@ -79,6 +85,30 @@ namespace Assets.Scripts.Game
             foreach (var temp in tempDict)
             {
                 _cubeButtons.Add(temp.Key,temp.Value);
+            }
+        }
+
+        public void RepositionColumns()
+        {
+            for (int i = 0; i <= _tileCube.GetEmptyColumnsCount(); i++)
+            {
+                var columnUpdate = _tileCube.RepositionColumnTiles();
+                if (columnUpdate != null)
+                {
+                    var tempDict = new Dictionary<Vector2Int, GameObject>();
+                    foreach (var position in columnUpdate)
+                    {
+                        var element = _cubeButtons.Where(x => x.Key == position.Key)?.SingleOrDefault();
+                        _cubeButtons.Remove(element.Value.Key);
+                        tempDict.Add(position.Value, element.Value.Value);
+                    }
+
+                    foreach (var temp in tempDict)
+                    {
+                        temp.Value.transform.Translate(Vector2.left * 0.7f);
+                        _cubeButtons.Add(temp.Key, temp.Value);
+                    }
+                }
             }
         }
 

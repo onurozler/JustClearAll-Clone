@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Runtime.Serialization;
+
 
 namespace Assets.Scripts.Classes
 {
@@ -10,42 +13,39 @@ namespace Assets.Scripts.Classes
         // Properties of Player
         private int _stage;
         private int _score;
-        private TileCube _tileCube;
+        private TileCube _tileCubes;
+        public Dictionary<string, string> PositionOfNumbers { get; set; }
 
         // Constructor
         public Player(int stage, int score, TileCube tileCube)
         {
             this._stage = stage;
             this._score = score;
-            this._tileCube = tileCube;
+            this._tileCubes = tileCube;
+            this.PositionOfNumbers = new Dictionary<string, string>();
         }
 
         // Getter & Setter
 
-        public int setStage
+        public int Stage
         {
+            get { return _stage; }
             set { _stage = value; }
         }
 
-        public int getStage
+        public int Score
         {
-            get {return _stage; }
-        }
-
-        public int setScore
-        {
+            get { return _score; }
             set { _score = value; }
         }
 
-        public int getScore
-        {
-            get { return _score; }
-        }
         public TileCube getTileCube
         {
-            get { return _tileCube; }
+            get { return _tileCubes; }
+        }
+        public TileCube setTileCube
+        {
+            set { _tileCubes = value; }
         }
     }
-
-
 }
