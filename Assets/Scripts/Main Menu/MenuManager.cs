@@ -1,4 +1,5 @@
 ﻿using Assets.Scripts.Classes;
+using Assets.Scripts.Game;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using Vector2 = System.Numerics.Vector2;
@@ -49,13 +50,15 @@ namespace Assets.Scripts.Main_Menu
 
         public void StartGameAgain()
         {
+            LoadedGame.isLoaded = false;
             DataManager.SaveData(new Player(1, 0, new TileCube()));
-            LoadGameScene();
+            SceneManager.LoadScene("Game");
         }
 
         // Load Game Scene to Start Main Game
         public void LoadGameScene()
         {
+            LoadedGame.isLoaded = true;
             SceneManager.LoadScene("Game");
         }
 

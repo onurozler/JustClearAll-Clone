@@ -15,17 +15,18 @@ namespace Assets.Scripts.Game
         private GameObject _tileBlock;
         private GameObject _gameArea;
 
-
+        // Initialization of Manager
         public void Init(GameObject area)
         {
             _gameArea = area;
             _tileBlock = Resources.Load("Prefabs/TileBlock") as GameObject;
         }
 
-        // Generate Level Loading from data
+        // Generate Level from beginning
         public void GenerateStage(BlockNumbers bNumbers)
         {
             bNumbers.Clear();
+            // Added GridLayoutGroup to making GameObjects to be seen more tidy.
             _gameArea.GetComponent<GridLayoutGroup>().enabled = true;
 
             // Generate Tiles 8x8 Array with Stage
@@ -38,6 +39,8 @@ namespace Assets.Scripts.Game
                 {
                     if (cubes[i, j] != 0)
                     {
+                        // Setting Properties of Number, Instantiate its GameObject and
+                        // Added to dictionary to be controlled easily.
                         int number = cubes[i, j];
                         GameObject cube = Instantiate(_tileBlock, _gameArea.transform);
                         bNumbers.SetCubeProperties(cube, number);
@@ -47,9 +50,11 @@ namespace Assets.Scripts.Game
             }
         }
 
+        // Generate Level from Player's Data
         public void GenerateStageFromData(BlockNumbers bNumbers, Player p)
         {
             bNumbers.Clear();
+            // No need Grid Layout since GameObjects positions are known.
             _gameArea.GetComponent<GridLayoutGroup>().enabled = false;
 
             var cubes = bNumbers.getTileCube.GetCubes();
@@ -70,6 +75,9 @@ namespace Assets.Scripts.Game
                             {
                                 int number = cubes[i, j];
 
+                                // Determine GameObject positions and Instantiate them according to data
+                                // Then added them to Dictionary
+
                                 GameObject cube = Instantiate(_tileBlock, _gameArea.transform);
                                 cube.GetComponent<RectTransform>().sizeDelta = new Vector2(93.5f,93.5f);
 
@@ -80,10 +88,7 @@ namespace Assets.Scripts.Game
                                 int cubeX = int.Parse(vector3Position[0]);
                                 int cubeY = int.Parse(vector3Position[1]);
 
-
                                 cube.transform.localPosition = new Vector3(cubeX,  (_gameArea.GetComponent<RectTransform>().rect.height/2) - i*20);
-
-
                             }
                         }
                     }

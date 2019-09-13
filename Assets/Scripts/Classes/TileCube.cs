@@ -5,6 +5,8 @@ using UnityEngine;
 
 namespace Assets.Scripts.Classes
 {
+    // Tile Cube Class is 2D array representation of numbers
+
     [Serializable]
     public class TileCube
     {
@@ -17,6 +19,8 @@ namespace Assets.Scripts.Classes
         {
             _tiles = new int[ROW,COLUMN];
         }
+
+        // Getter & Setter
 
         public int GetValue(Vector2Int index)
         {
@@ -33,6 +37,8 @@ namespace Assets.Scripts.Classes
             return _tiles;
         }
 
+        // Check empty column to concatenate columns
+
         public int GetEmptyColumnsCount()
         {
             int number = 0;
@@ -46,6 +52,8 @@ namespace Assets.Scripts.Classes
 
             return number;
         }
+
+        // Generates 2D array depending on Stage
 
         public int[,] GenerateTilesWithStage(int stage)
         {
@@ -65,6 +73,7 @@ namespace Assets.Scripts.Classes
             }
             probabilityOfNumbers.Add(stage + 2, percentage);
 
+            // Filling Array with probabilities
 
             for (int i = 0; i < ROW; i++)
             {
@@ -80,12 +89,12 @@ namespace Assets.Scripts.Classes
                         }
                         else
                         {
-                            _tiles[i, j] = 1;
+                            _tiles[i, j] = UnityEngine.Random.Range(1, stage + 3);
                         }
                     }
                 }
             }
-            // Selecting Target Block
+            // Selecting Target Block that exist in array only one time
             int targetX = UnityEngine.Random.Range(0, ROW);
             int targetY = UnityEngine.Random.Range(0, COLUMN);
 
@@ -93,6 +102,10 @@ namespace Assets.Scripts.Classes
 
             return _tiles;
         }
+
+        // It returns an array and making selected tiles value to -1 to indicate it and
+        // added it to a List by using FloodFill Algorithm
+
         public List<Vector2Int> GetSelectedBlockTiles(Vector2Int index)
         {
             int[,] temp = _tiles.Clone() as int[,];
@@ -111,6 +124,8 @@ namespace Assets.Scripts.Classes
             return returnPositionOfSelectedCubes;
         }
 
+        // Makes zero the selected block tiles which means deleted.
+
         public void DeleteSelectedBlockTiles(Vector2Int index)
         {
             for (int i = 0; i < ROW; i++)
@@ -123,6 +138,7 @@ namespace Assets.Scripts.Classes
             }
         }
 
+        //
 
         public Dictionary<Vector2Int,Vector2Int> RepositionTiles()
         {
@@ -153,6 +169,7 @@ namespace Assets.Scripts.Classes
                 }
             }
 
+            // Added their old and new positions in Dictionary by converting two list
             var returnDict = oldPosition.Zip(newPosition, (k, v) => new {Key = k, Value = v}).
                 ToDictionary(x=> x.Key, x=>x.Value);
 

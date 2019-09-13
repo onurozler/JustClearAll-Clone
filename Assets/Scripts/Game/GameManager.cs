@@ -1,9 +1,8 @@
-﻿using System.Collections.Generic;
+﻿
 using Assets.Scripts.Classes;
 using UnityEngine;
 using UnityEngine.UI;
-using Vector2 = System.Numerics.Vector2;
-using Vector3 = System.Numerics.Vector3;
+
 
 namespace Assets.Scripts.Game
 {
@@ -54,7 +53,7 @@ namespace Assets.Scripts.Game
             Stage = _player.Stage;
             Score = _player.Score;
 
-            if(_player.PositionOfNumbers.Count>0)
+            if(LoadedGame.isLoaded)
                 _levelManager.GenerateStageFromData(_bNumbers, _player);
 
             else
@@ -87,24 +86,31 @@ namespace Assets.Scripts.Game
             }
             else
             {
-                target = _player.Stage * 500;
+                target = (_player.Stage * 500) + ((_player.Stage-1) * 1000);
             }
 
             return target;
         }
 
+        // Update player data by increasing stage, meaning player passed stage.
         public void UpdatePlayerData()
         {
+            LoadedGame.isLoaded = false;
             _player.Stage = Stage + 1;
+            _player.Score = Score;
             DataManager.SaveData(_player);
         }
 
+        // Clear player data, meaning player wants to play from beginning.
         public void ClearPlayerData()
         {
+            LoadedGame.isLoaded = false;
             _player = new Player(1, 0, new TileCube());
             DataManager.SaveData(_player);
         }
 
+        // Save player data, by holding GameObject positions.
+        // Vector classes are not serializable that's why positions are kept string
         public void SavePlayerData()
         {
             var numbers = _bNumbers.GetNumbers();
@@ -123,6 +129,7 @@ namespace Assets.Scripts.Game
             DataManager.SaveData(_player);
         }
 
+        // When Player closes app, save the data.
         void OnApplicationQuit()
         {
             print("Player exited, Saving Last Stage of Player...");

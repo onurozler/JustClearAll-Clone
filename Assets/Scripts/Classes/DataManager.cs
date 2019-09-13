@@ -2,6 +2,7 @@
 using System.IO;
 using System.Runtime.Serialization.Formatters.Binary;
 using UnityEngine;
+using UnityEngine.Android;
 
 namespace Assets.Scripts.Classes
 {
@@ -13,7 +14,7 @@ namespace Assets.Scripts.Classes
         private const string SAVE_PATH_PC = "/Save.dat";
 
         // Path to save data on Android
-        private const string SAVE_PATH_ANDROID = "Save.bytes";
+        private const string SAVE_PATH_ANDROID = "/Save.bytes";
 
         // Saving Player's data as binary
         public static string SaveData(Player player)
@@ -45,7 +46,8 @@ namespace Assets.Scripts.Classes
                 }
             }
 #elif UNITY_ANDROID
-            var fi = new System.IO.FileInfo(@"Assets//Resources//"+SAVE_PATH_ANDROID);
+            
+            var fi = new System.IO.FileInfo(Application.persistentDataPath + SAVE_PATH_ANDROID);
 
             try
             {
@@ -56,7 +58,7 @@ namespace Assets.Scripts.Classes
                     binaryFormatter.Serialize(binaryFile, player);
                     binaryFile.Flush();
                 }
-
+                Debug.Log("creating bin succesfull");
                 return "succesfull!";
             }
             catch (System.Exception e)
@@ -95,22 +97,26 @@ namespace Assets.Scripts.Classes
                 }
             }
 #elif UNITY_ANDROID
-            string fileNameWithoutExtension = Path.GetFileNameWithoutExtension(SAVE_PATH_ANDROID);
-            TextAsset textAsset = Resources.Load(fileNameWithoutExtension) as TextAsset;
+
+            if (!System.IO.File.Exists(Application.persistentDataPath + SAVE_PATH_ANDROID))
+                return null;
+
+            byte[] bytes = System.IO.File.ReadAllBytes(Application.persistentDataPath + SAVE_PATH_ANDROID);
 
             try
             {
-                // Open the bin file in byte format and read it directly to our dictionary
-                using (Stream stream = new MemoryStream(textAsset.bytes))
+                Player player;
+                // Open the bin file in byte format and read it directly 
+                using (Stream stream = new MemoryStream(bytes))
                 {
                     BinaryFormatter formatter = new BinaryFormatter();
-                    Player player = formatter.Deserialize(stream) as Player;
+                     player = formatter.Deserialize(stream) as Player;
 
                     Debug.Log("Read bin successful!");
 
-                    return player;
+                    
                 }
-
+                return player;
 
             }
             catch (System.Exception e)

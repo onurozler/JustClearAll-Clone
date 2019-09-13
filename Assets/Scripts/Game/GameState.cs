@@ -1,13 +1,23 @@
 ﻿namespace Assets.Scripts.Game
 {
+
+    // Indicate is Game Loaded
+
+    public class LoadedGame
+    {
+        public static bool isLoaded = true;
+    }
+    
+
     // Indicate Game State
 
     public enum GameState
     {
         PLAYING,
         PAUSING,
-        NEXT_STAGE
     }
+
+    // Indicate Mission
 
     public enum Mission
     {

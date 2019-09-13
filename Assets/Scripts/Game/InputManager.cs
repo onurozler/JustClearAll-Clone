@@ -8,15 +8,15 @@ using UnityEngine.UI;
 
 namespace Assets.Scripts.Game
 {
-    // Input Manager controls Player Interaction and Actions on UI and Game
+    // Input Manager handles Player Interaction and Actions on UI and Game
 
     public class InputManager : MonoBehaviour
     {
         private BlockNumbers _blockNumbers;
         private GameObject _gameArea;
         private GameObject _canvas;
-        
 
+        // Initialization of Manager
         public void Init(BlockNumbers blockNumbers, GameObject area, GameObject canvas)
         {
             _blockNumbers = blockNumbers;
@@ -24,27 +24,33 @@ namespace Assets.Scripts.Game
             _canvas = canvas;
         }
 
+        // Handling Player's interactions in Game
         private void Update()
         { 
             // If Player plays the game, enable him to click buttons
             if (GameManager.GameStatus == GameState.PLAYING)
             {
-                // Detect which Button to Click
+                // When Player Clicks
                 if (Input.GetMouseButtonDown(0))
                 {
                     // Disable Grid Layout Group to fall Buttons physically
                     if (_gameArea.GetComponent<GridLayoutGroup>().enabled)
                         _gameArea.GetComponent<GridLayoutGroup>().enabled = false;
 
+                    // Takes Mouse Position as 2D
                     Vector3 mousePos = Camera.main.ScreenToWorldPoint(Input.mousePosition);
                     Vector2 mousePos2D = new Vector2(mousePos.x, mousePos.y);
 
+                    // Create RaycastHit2D to determine which block is clicked. 
                     RaycastHit2D hit = Physics2D.Raycast(mousePos2D, Vector2.zero);
 
+                    // If Player clicks a block.
                     if (hit.collider != null)
                     {
                         if (hit.collider.CompareTag("Clickable"))
                         {
+                            // Take block as Game object and Check if its block clicked before
+                            // If not just highlight
                             GameObject clicked = hit.collider.gameObject;
                             if (AreTheyInSameGroup(clicked))
                                 DoubleClickSelectedNumbers(clicked);
@@ -57,19 +63,23 @@ namespace Assets.Scripts.Game
         }
 
         // ************************************** Game Actions *************************************************
+
+        // Temp List holds GameObjects of first clicked GameObjects
         private List<GameObject> _clickCheck = new List<GameObject>();
+
+        // Checks the list, and determine if they are in same Group
         public bool AreTheyInSameGroup(GameObject item)
         {
             if (_clickCheck == null) return false;
             return _clickCheck.Contains(item);
         }
 
+        // Highlight Selected blocks and passing infos to show on UI.
         public void HighlightSelectedNumbers(GameObject clicked)
         {
             Vector2Int positionClicked = _blockNumbers.GetPositionByElement(clicked);
             List<GameObject> selectedElements = _blockNumbers.GetSelectedBlockNumbers(positionClicked);
             
-
             if (selectedElements == null) return;
 
             int numberOfElement = int.Parse(selectedElements[0].transform.GetChild(0).GetComponent<Text>().text);
@@ -79,13 +89,16 @@ namespace Assets.Scripts.Game
             _clickCheck.AddRange(selectedElements);
         }
 
+        // Concatenate same numbers into one, increase its properties and delete others.
         public void DoubleClickSelectedNumbers(GameObject clicked)
         {
             Vector2Int positionClicked = _blockNumbers.GetPositionByElement(clicked);
             List<GameObject> selectedElements = _blockNumbers.GetSelectedBlockNumbers(positionClicked);
 
+            // Increase Selected Number
             _blockNumbers.IncreaseNumber(positionClicked);
 
+            // Destroy others
             var deletedElements = selectedElements.Where(x => x != clicked);
             foreach (var element in deletedElements)
             {
@@ -94,18 +107,10 @@ namespace Assets.Scripts.Game
                 Destroy(element);
             }
 
+            // Reposition GameObjects and Updates 2D array after move.
             _blockNumbers.RepositionElements();
             _blockNumbers.RepositionColumns();
             _clickCheck.Clear();
-
-
-
-            for (int i = 0; i < 8; i++)
-            {
-                print(_blockNumbers.getTileCube.GetCubes()[i, 0] + " " + _blockNumbers.getTileCube.GetCubes()[i, 1] + " " + _blockNumbers.getTileCube.GetCubes()[i, 2] + " " + _blockNumbers.getTileCube.GetCubes()[i, 3] + " " + _blockNumbers.getTileCube.GetCubes()[i, 4] + " " + _blockNumbers.getTileCube.GetCubes()[i, 5] + " " + _blockNumbers.getTileCube.GetCubes()[i, 6] + " " + _blockNumbers.getTileCube.GetCubes()[i, 7]);
-            }
-
-
 
             // Update Score
 
@@ -113,10 +118,11 @@ namespace Assets.Scripts.Game
             int addedScore = CalculatePoint(numberOfElement, selectedElements.Count);
             ScoreUpdate(addedScore);
 
+            // Check If player can move, if not finish the game.
+
             if (!_blockNumbers.CanMove())
                 FinishedStage(_blockNumbers.GetLength());
 
-            
         }
 
 
@@ -166,7 +172,7 @@ namespace Assets.Scripts.Game
             SceneManager.LoadScene("Game");
         }
 
-        // Showing Successfull or fail pop up according to last score
+        // Showing Successful or fail pop up according to last score
         public void ShowLastPopUp(int extra)
         {
             GameObject LastPopUp;
@@ -216,19 +222,18 @@ namespace Assets.Scripts.Game
         public int CalculateExtraPoint(int count)
         {
             int total = 0;
-            if (count == 0)
-                total = 1000 + ((GameManager.Stage - 1) * 500);
-
             int penaltyPoint = 100 + ((GameManager.Stage - 1) * 50);
 
             penaltyPoint *= count;
-
             total -= penaltyPoint;
+
+            if (count == 1)
+                total = 1000 + ((GameManager.Stage - 1) * 500);
 
             return total;
         }
 
-        // Calculate total Score and decide if Player is Successfull or not.
+        // Calculate total Score and decide if Player is Successful or not.
         public void FinishedStage(int leftElements)
         {
             GameManager.GameStatus = GameState.PAUSING;
